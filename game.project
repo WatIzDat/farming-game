@@ -15,4 +15,8 @@ input_method = HiddenInputField
 [project]
 title = FarmingGame
 dependencies#0 = https://github.com/britzl/defold-orthographic/archive/refs/tags/3.3.1.zip
+dependencies#1 = https://github.com/selimanac/defold-random/archive/refs/tags/v1.2.6.zip
+
+[tilemap]
+max_tile_count = 4096
 

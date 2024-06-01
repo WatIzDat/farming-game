@@ -1,10 +1,14 @@
 require("library.perlin")
 
-local height = 32
-local width = 32
+local height = 64
+local width = 64
 
-function init(self)    
+function init(self)
     local value = {}
+
+    local seed_octave1 = rnd.number()
+    local seed_octave2 = rnd.number()
+    local seed_octave3 = rnd.number()
 
     for y = 1, height do
         value[y] = {}
@@ -13,11 +17,17 @@ function init(self)
             local nx = x / (width / 3)
             local ny = y / (height / 3)
 
-            value[y][x] = (perlin:noise(nx, ny, 0.3) + 1) / 2
+            local elevation = 1 * ((perlin:noise(1 * nx, 1 * ny, seed_octave1) + 1) / 2)
+                            + 0.5 * ((perlin:noise(2 * nx, 2 * ny, seed_octave2) + 1) / 2)
+                            + 0.25 * ((perlin:noise(4 * nx, 4 * ny, seed_octave3) + 1) / 2)
+
+            elevation = elevation / (1 + 0.5 + 0.25)
+
+            value[y][x] = (elevation * 1.2) ^ 1.35
 
             print(value[y][x])
 
-            if value[y][x] < 0.5 then
+            if value[y][x] < 0.43 then
                 tilemap.set_tile("#world", "ground", x, y, 1)
                 print("water")
             else
