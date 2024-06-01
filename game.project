@@ -1,5 +1,6 @@
 [bootstrap]
 main_collection = /main/main.collectionc
+render = /orthographic/render/orthographic.renderc
 
 [script]
 shared_state = 1
@@ -13,4 +14,5 @@ input_method = HiddenInputField
 
 [project]
 title = FarmingGame
+dependencies#0 = https://github.com/britzl/defold-orthographic/archive/refs/tags/3.3.1.zip
 

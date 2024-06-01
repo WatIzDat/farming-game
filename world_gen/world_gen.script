@@ -1,0 +1,29 @@
+require("library.perlin")
+
+local height = 32
+local width = 32
+
+function init(self)    
+    local value = {}
+
+    for y = 1, height do
+        value[y] = {}
+        
+        for x = 1, width do
+            local nx = x / (width / 3)
+            local ny = y / (height / 3)
+
+            value[y][x] = (perlin:noise(nx, ny, 0.3) + 1) / 2
+
+            print(value[y][x])
+
+            if value[y][x] < 0.5 then
+                tilemap.set_tile("#world", "ground", x, y, 1)
+                print("water")
+            else
+                tilemap.set_tile("#world", "ground", x, y, 2)
+                print("land")
+            end
+        end
+    end
+end
