@@ -1,4 +1,16 @@
+key_trigger {
+  input: KEY_SPACE
+  action: "new_world"
+}
 mouse_trigger {
-  input: MOUSE_BUTTON_1
-  action: "touch"
+  input: MOUSE_BUTTON_LEFT
+  action: "camera_pan"
+}
+mouse_trigger {
+  input: MOUSE_WHEEL_UP
+  action: "camera_zoom_in"
+}
+mouse_trigger {
+  input: MOUSE_WHEEL_DOWN
+  action: "camera_zoom_out"
 }

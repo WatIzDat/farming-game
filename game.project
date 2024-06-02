@@ -18,5 +18,5 @@ dependencies#0 = https://github.com/britzl/defold-orthographic/archive/refs/tags
 dependencies#1 = https://github.com/selimanac/defold-random/archive/refs/tags/v1.2.6.zip
 
 [tilemap]
-max_tile_count = 4096
+max_tile_count = 16384
 
