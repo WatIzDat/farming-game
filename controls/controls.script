@@ -1,0 +1,29 @@
+local camera = require("orthographic.camera")
+
+local CAMERA_ID = hash("/camera")
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+end
+
+function on_input(self, action_id, action)
+	if action_id == hash("camera_zoom_in") then
+		local current_zoom = camera.get_zoom(CAMERA_ID)
+
+		local new_zoom = current_zoom + 0.01
+
+		if new_zoom < 0.5 then
+			camera.set_zoom(CAMERA_ID, new_zoom)
+		end
+	end
+
+	if action_id == hash("camera_zoom_out") then
+		local current_zoom = camera.get_zoom(CAMERA_ID)
+		
+		local new_zoom = current_zoom - 0.01
+
+		if new_zoom > 0.1 then
+			camera.set_zoom(CAMERA_ID, new_zoom)
+		end
+	end
+end
