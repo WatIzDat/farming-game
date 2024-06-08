@@ -1,3 +1,4 @@
+local constants = require("library.constants")
 local camera = require("orthographic.camera")
 
 local CAMERA_ID = hash("/camera")
@@ -7,7 +8,7 @@ function init(self)
 end
 
 function on_input(self, action_id, action)
-	if action_id == hash("camera_zoom_in") then
+	if action_id == constants.input.CAMERA_ZOOM_IN then
 		local current_zoom = camera.get_zoom(CAMERA_ID)
 
 		local new_zoom = current_zoom + 0.01
@@ -17,7 +18,7 @@ function on_input(self, action_id, action)
 		end
 	end
 
-	if action_id == hash("camera_zoom_out") then
+	if action_id == constants.input.CAMERA_ZOOM_OUT then
 		local current_zoom = camera.get_zoom(CAMERA_ID)
 		
 		local new_zoom = current_zoom - 0.01
