@@ -1,4 +1,7 @@
 require("library.perlin")
+local camera = require("orthographic.camera")
+
+local CAMERA_ID = hash("/camera")
 
 local height = 128
 local width = 128
@@ -6,12 +9,29 @@ local width = 128
 function init(self)
     msg.post(".", "acquire_input_focus")
 
+    self.dragged = false
+    self.total_offset = vmath.vector3()
+
     generate_world()
 end
 
 function on_input(self, action_id, action)
     if action_id == hash("new_world") and action.pressed then
         generate_world()
+    end
+
+    if action_id == hash("camera_pan") then
+        if self.dragged then
+            local mouse_pos = camera.screen_to_world(CAMERA_ID, vmath.vector3(action.x, action.y, 0))
+            go.set_position(mouse_pos - self.total_offset)
+        end
+
+        if action.pressed then
+            self.dragged = true
+            self.total_offset = camera.screen_to_world(CAMERA_ID, vmath.vector3(action.x, action.y, 0)) - go.get_position()
+        elseif action.released then
+            self.dragged = false
+        end
     end
 end
 

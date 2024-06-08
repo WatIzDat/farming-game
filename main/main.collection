@@ -27,7 +27,7 @@ instances {
     }
     properties {
       id: "follow"
-      value: "true"
+      value: "false"
       type: PROPERTY_TYPE_BOOLEAN
     }
   }
@@ -76,8 +76,8 @@ embedded_instances {
   "}\n"
   ""
   position {
-    x: -8192.0
-    y: -8192.0
+    x: 0.0
+    y: -0.0
     z: 0.0
   }
   rotation {
