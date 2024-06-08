@@ -93,10 +93,10 @@ embedded_instances {
   }
 }
 embedded_instances {
-  id: "controls"
+  id: "managers"
   data: "components {\n"
-  "  id: \"controls\"\n"
-  "  component: \"/controls/controls.script\"\n"
+  "  id: \"camera_manager\"\n"
+  "  component: \"/camera/camera_manager.script\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"

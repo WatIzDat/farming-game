@@ -1,6 +1,8 @@
 require("library.perlin")
 local camera = require("orthographic.camera")
 
+go.property("tile_size", 128)
+
 local CAMERA_ID = hash("/camera")
 
 local height = 128
@@ -12,12 +14,12 @@ function init(self)
     self.dragged = false
     self.total_offset = vmath.vector3()
 
-    generate_world()
+    generate_world(self)
 end
 
 function on_input(self, action_id, action)
     if action_id == hash("new_world") and action.pressed then
-        generate_world()
+        generate_world(self)
     end
 
     if action_id == hash("camera_pan") then
@@ -33,9 +35,22 @@ function on_input(self, action_id, action)
             self.dragged = false
         end
     end
+
+    if action_id == hash("till_land") and action.pressed then
+        local pos = go.get_position()
+        local action_coords = camera.screen_to_world(CAMERA_ID, vmath.vector3(action.x, action.y, 0)) - go.get_position()
+
+        local tx = 1 + math.floor(action_coords.x / self.tile_size)
+        local ty = 1 + math.floor(action_coords.y / self.tile_size)
+
+        tilemap.set_tile("#world", "ground", tx, ty, 1)
+
+        self.tiles[ty][tx] = 1
+    end
 end
 
-function generate_world()
+function generate_world(self)
+    self.tiles = {}
     local value = {}
 
     local seed_octave1 = rnd.number()
@@ -43,6 +58,7 @@ function generate_world()
     local seed_octave3 = rnd.number()
 
     for y = 1, height do
+        self.tiles[y] = {}
         value[y] = {}
 
         for x = 1, width do
@@ -57,14 +73,12 @@ function generate_world()
 
             value[y][x] = (elevation * 1.2) ^ 1.35
 
-            print(value[y][x])
-
             if value[y][x] < 0.43 then
                 tilemap.set_tile("#world", "ground", x, y, 1)
-                print("water")
+                self.tiles[y][x] = 1
             else
                 tilemap.set_tile("#world", "ground", x, y, 2)
-                print("land")
+                self.tiles[y][x] = 2
             end
         end
     end

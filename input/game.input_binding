@@ -14,3 +14,7 @@ mouse_trigger {
   input: MOUSE_WHEEL_DOWN
   action: "camera_zoom_out"
 }
+mouse_trigger {
+  input: MOUSE_BUTTON_RIGHT
+  action: "till_land"
+}
