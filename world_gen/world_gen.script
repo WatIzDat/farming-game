@@ -10,6 +10,64 @@ local TILEMAP_URL = "#world"
 local height = 128
 local width = 128
 
+local function set_tile(self, layer, x, y, tile)
+    tilemap.set_tile(TILEMAP_URL, layer, x, y, tile)
+    self.tiles[y][x] = tile
+end
+
+local function generate_world(self)
+    self.tiles = {}
+    local value = {}
+
+    local seed_octave1 = rnd.number()
+    local seed_octave2 = rnd.number()
+    local seed_octave3 = rnd.number()
+
+    for y = 1, height do
+        self.tiles[y] = {}
+        value[y] = {}
+
+        for x = 1, width do
+            local nx = x / (width / 3)
+            local ny = y / (height / 3)
+
+            local elevation = 1 * ((perlin:noise(1 * nx, 1 * ny, seed_octave1) + 1) / 2)
+            + 0.5 * ((perlin:noise(2 * nx, 2 * ny, seed_octave2) + 1) / 2)
+            + 0.25 * ((perlin:noise(4 * nx, 4 * ny, seed_octave3) + 1) / 2)
+
+            elevation = elevation / (1 + 0.5 + 0.25)
+
+            value[y][x] = (elevation * 1.2) ^ 1.35
+
+            if value[y][x] < 0.43 then
+                set_tile(self, constants.layers.GROUND, x, y, constants.tiles.WATER_TILE)
+            else
+                set_tile(self, constants.layers.GROUND, x, y, constants.tiles.LAND_TILE)
+            end
+        end
+    end
+end
+
+local function within_bounds(x, y)
+    local bx, by, bw, bh = tilemap.get_bounds(TILEMAP_URL)
+    return x >= bx and y >= by and x < (bx + bw) and y < (by + bh)
+end
+
+local function is_water_in_square(square_side_length, square_distance, square_center_x, square_center_y)
+    local square_bottom_left = vmath.vector3(square_center_x - square_distance, square_center_y - square_distance, 0)
+
+    for x = square_bottom_left.x, square_bottom_left.x + (square_side_length - 1) do
+        for y = square_bottom_left.y, square_bottom_left.y + (square_side_length - 1) do
+            if within_bounds(x, y) 
+            and tilemap.get_tile(TILEMAP_URL, constants.layers.GROUND, x, y) == constants.tiles.WATER_TILE then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
 function init(self)
     msg.post(".", "acquire_input_focus")
 
@@ -46,45 +104,13 @@ function on_input(self, action_id, action)
         local ty = 1 + math.floor(action_coords.y / self.tile_size)
 
         if tilemap.get_tile(TILEMAP_URL, constants.layers.GROUND, tx, ty) == constants.tiles.LAND_TILE then
-            set_tile(self, constants.layers.GROUND, tx, ty, constants.tiles.FARMLAND_TILE)
-        end
-    end
-end
-
-function generate_world(self)
-    self.tiles = {}
-    local value = {}
-
-    local seed_octave1 = rnd.number()
-    local seed_octave2 = rnd.number()
-    local seed_octave3 = rnd.number()
-
-    for y = 1, height do
-        self.tiles[y] = {}
-        value[y] = {}
-
-        for x = 1, width do
-            local nx = x / (width / 3)
-            local ny = y / (height / 3)
-
-            local elevation = 1 * ((perlin:noise(1 * nx, 1 * ny, seed_octave1) + 1) / 2)
-            + 0.5 * ((perlin:noise(2 * nx, 2 * ny, seed_octave2) + 1) / 2)
-            + 0.25 * ((perlin:noise(4 * nx, 4 * ny, seed_octave3) + 1) / 2)
-
-            elevation = elevation / (1 + 0.5 + 0.25)
-
-            value[y][x] = (elevation * 1.2) ^ 1.35
-
-            if value[y][x] < 0.43 then
-                set_tile(self, constants.layers.GROUND, x, y, constants.tiles.WATER_TILE)
+            if is_water_in_square(3, 1, tx, ty) then
+                set_tile(self, constants.layers.GROUND, tx, ty, constants.tiles.FERTILE_FARMLAND_TILE)
+            elseif is_water_in_square(5, 2, tx, ty) then
+                set_tile(self, constants.layers.GROUND, tx, ty, constants.tiles.MIDFERTILE_FARMLAND_TILE)
             else
-                set_tile(self, constants.layers.GROUND, x, y, constants.tiles.LAND_TILE)
+                set_tile(self, constants.layers.GROUND, tx, ty, constants.tiles.UNFERTILE_FARMLAND_TILE)
             end
         end
     end
-end
-
-function set_tile(self, layer, x, y, tile)
-    tilemap.set_tile(TILEMAP_URL, layer, x, y, tile)
-    self.tiles[y][x] = tile
 end
