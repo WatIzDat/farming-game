@@ -20,5 +20,5 @@ mouse_trigger {
 }
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
-  action: "plant_crop"
+  action: "plant_or_destroy_crop"
 }

@@ -1,0 +1,28 @@
+local constants = require("library.constants")
+
+go.property("crops", {})
+go.property("seeds", {})
+
+function init(self)
+	self.crops = {}
+	self.seeds = {}
+
+	for k, v in pairs(constants.tiles) do
+		self.crops[v] = 0
+		self.seeds[v] = 0
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == constants.messages.HARVEST_CROP then
+		if message.crop == message.max then
+			self.crops[message.max] = self.crops[message.max] + 1
+
+			print(self.crops[message.max])
+		else
+			self.seeds[message.min] = self.seeds[message.min] + (message.crop - message.min + 1)
+
+			print(self.seeds[message.min])
+		end
+	end
+end
