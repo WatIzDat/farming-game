@@ -18,3 +18,7 @@ mouse_trigger {
   input: MOUSE_BUTTON_RIGHT
   action: "till_land"
 }
+mouse_trigger {
+  input: MOUSE_BUTTON_LEFT
+  action: "plant_crop"
+}

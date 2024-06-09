@@ -7,10 +7,12 @@ M.tiles.LAND_TILE = 2
 M.tiles.UNFERTILE_FARMLAND_TILE = 3
 M.tiles.MIDFERTILE_FARMLAND_TILE = 4
 M.tiles.FERTILE_FARMLAND_TILE = 5
+M.tiles.WHEAT_1 = 6
 
 M.layers = {}
 
 M.layers.GROUND = "ground"
+M.layers.CROPS = "crops"
 
 M.input = {}
 
@@ -19,5 +21,6 @@ M.input.CAMERA_PAN = hash("camera_pan")
 M.input.CAMERA_ZOOM_IN = hash("camera_zoom_in")
 M.input.CAMERA_ZOOM_OUT = hash("camera_zoom_out")
 M.input.TILL_LAND = hash("till_land")
+M.input.PLANT_CROP = hash("plant_crop")
 
 return M

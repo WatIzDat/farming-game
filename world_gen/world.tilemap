@@ -20,5 +20,10 @@ layers {
     rotate90: 0
   }
 }
+layers {
+  id: "crops"
+  z: 1.0
+  is_visible: 1
+}
 material: "/builtins/materials/tile_map.material"
 blend_mode: BLEND_MODE_ALPHA
