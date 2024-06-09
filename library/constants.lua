@@ -7,7 +7,8 @@ M.tiles.LAND_TILE = 2
 M.tiles.UNFERTILE_FARMLAND_TILE = 3
 M.tiles.MIDFERTILE_FARMLAND_TILE = 4
 M.tiles.FERTILE_FARMLAND_TILE = 5
-M.tiles.WHEAT_1 = 6
+M.tiles.WHEAT_MIN_TILE = 6
+M.tiles.WHEAT_MAX_TILE = 10
 
 M.layers = {}
 

@@ -83,6 +83,58 @@ local function get_tile_coords_from_action_coords(self, action_x, action_y)
     return t
 end
 
+local function init_growth_table(self)
+    self.growth_values = {}
+
+    for x = 1, width do
+        self.growth_values[x] = {}
+        
+        for y = 1, height do
+            self.growth_values[x][y] = {}
+            
+            self.growth_values[x][y].time = 0
+            self.growth_values[x][y].amount = 0
+        end
+    end
+end
+
+local function create_growth_timer(self, x, y, tile)
+    self.growth_values[x][y].amount = tile
+    
+    timer.delay(1, true, function()
+        self.growth_values[x][y].time = self.growth_values[x][y].time + 1
+
+        print(self.growth_values[x][y].time)
+
+        if self.growth_values[x][y].amount + 1 > constants.tiles.WHEAT_MAX_TILE then
+            return
+        end
+
+        local ground_tile = tilemap.get_tile(TILEMAP_URL, constants.layers.GROUND, x, y)
+
+        if ground_tile == constants.tiles.FERTILE_FARMLAND_TILE
+        and self.growth_values[x][y].time % 5 == 0 then
+            set_tile(self, constants.layers.CROPS, x, y, self.growth_values[x][y].amount + 1)
+            
+            self.growth_values[x][y].amount = self.growth_values[x][y].amount + 1
+        end
+
+        if ground_tile == constants.tiles.MIDFERTILE_FARMLAND_TILE
+        and self.growth_values[x][y].time % 10 == 0 then
+            set_tile(self, constants.layers.CROPS, x, y, self.growth_values[x][y].amount + 1)
+
+            self.growth_values[x][y].amount = self.growth_values[x][y].amount + 1
+        end
+
+        if ground_tile == constants.tiles.UNFERTILE_FARMLAND_TILE
+        and self.growth_values[x][y].time % 15 == 0 then
+            set_tile(self, constants.layers.CROPS, x, y, self.growth_values[x][y].amount + 1)
+
+            self.growth_values[x][y].amount = self.growth_values[x][y].amount + 1
+        end
+    end)
+end
+
 function init(self)
     msg.post(".", "acquire_input_focus")
 
@@ -90,6 +142,8 @@ function init(self)
     self.total_offset = vmath.vector3()
 
     generate_world(self)
+
+    init_growth_table(self)
 end
 
 function on_input(self, action_id, action)
@@ -130,7 +184,8 @@ function on_input(self, action_id, action)
 
         if tile_util.is_farmland(tilemap.get_tile(TILEMAP_URL, constants.layers.GROUND, t.x, t.y))
         and tilemap.get_tile(TILEMAP_URL, constants.layers.CROPS, t.x, t.y) == 0 then
-            set_tile(self, constants.layers.CROPS, t.x, t.y, constants.tiles.WHEAT_1)
+            set_tile(self, constants.layers.CROPS, t.x, t.y, constants.tiles.WHEAT_MIN_TILE)
+            create_growth_timer(self, t.x, t.y, constants.tiles.WHEAT_MIN_TILE)
         end
     end
 end
