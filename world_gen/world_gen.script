@@ -101,12 +101,12 @@ end
 local function create_growth_timer(self, x, y, tile)
     self.growth_values[x][y].amount = tile
     
-    timer.delay(1, true, function()
+    self.growth_values[x][y].timer = timer.delay(1, true, function()
         self.growth_values[x][y].time = self.growth_values[x][y].time + 1
 
-        print(self.growth_values[x][y].time)
-
         if self.growth_values[x][y].amount + 1 > constants.tiles.WHEAT_MAX_TILE then
+            timer.cancel(self.growth_values[x][y].timer)
+            
             return
         end
 
