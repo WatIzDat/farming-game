@@ -2,12 +2,25 @@ local constants = require("library.constants")
 
 go.property("balance", 0)
 
-function on_message(self, message_id, message, sender)
-	if message_id == constants.messages.SELL_CROPS then
-		if message.crop == constants.tiles.WHEAT_MAX_TILE then
-			self.balance = self.balance + message.amount
+local INVENTORY_URL = "/inventory#script"
 
-			print(self.balance)
-		end
-	end
+function on_message(self, message_id, message, sender)
+    if message_id == constants.messages.SELL_CROPS then
+        if message.crop == constants.tiles.WHEAT_MAX_TILE then
+            self.balance = self.balance + message.amount
+
+            print(self.balance)
+        end
+    end
+
+    if message_id == constants.messages.BUY_SEEDS then
+        if message.crop == constants.tiles.WHEAT_MIN_TILE
+        and self.balance >= message.amount then
+            self.balance = self.balance - message.amount
+
+            msg.post(INVENTORY_URL, constants.messages.BUY_SEEDS, { crop = message.crop, amount = message.amount })
+
+            print("bal " .. self.balance)
+        end
+    end
 end

@@ -6,6 +6,10 @@ key_trigger {
   input: KEY_S
   action: "sell_crops"
 }
+key_trigger {
+  input: KEY_B
+  action: "buy_seeds"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
   action: "camera_pan"

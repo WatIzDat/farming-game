@@ -29,6 +29,12 @@ function on_message(self, message_id, message, sender)
 			print(self.seeds[message.min])
 		end
 	end
+
+	if message_id == constants.messages.BUY_SEEDS then
+		self.seeds[message.crop] = self.seeds[message.crop] + message.amount
+
+		print("seed " .. self.seeds[message.crop])
+	end
 end
 
 function on_input(self, action_id, action)
@@ -37,6 +43,12 @@ function on_input(self, action_id, action)
 			msg.post(BALANCE_URL, constants.messages.SELL_CROPS, { crop = k, amount = v })
 
 			self.crops[k] = 0
+		end
+	end
+
+	if action_id == constants.input.BUY_SEEDS and action.pressed then
+		for k, v in pairs(self.seeds) do
+			msg.post(BALANCE_URL, constants.messages.BUY_SEEDS, { crop = k, amount = 1 })
 		end
 	end
 end
