@@ -2,6 +2,10 @@ key_trigger {
   input: KEY_SPACE
   action: "new_world"
 }
+key_trigger {
+  input: KEY_S
+  action: "sell_crops"
+}
 mouse_trigger {
   input: MOUSE_BUTTON_LEFT
   action: "camera_pan"

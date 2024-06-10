@@ -1,0 +1,13 @@
+local constants = require("library.constants")
+
+go.property("balance", 0)
+
+function on_message(self, message_id, message, sender)
+	if message_id == constants.messages.SELL_CROPS then
+		if message.crop == constants.tiles.WHEAT_MAX_TILE then
+			self.balance = self.balance + message.amount
+
+			print(self.balance)
+		end
+	end
+end

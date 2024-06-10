@@ -7,6 +7,7 @@ go.property("tile_size", 128)
 
 local CAMERA_ID = hash("/camera")
 local TILEMAP_URL = "#world"
+local INVENTORY_URL = "/inventory#script"
 
 local height = 128
 local width = 128
@@ -190,7 +191,7 @@ function on_input(self, action_id, action)
                 create_growth_timer(self, t.x, t.y, constants.tiles.WHEAT_MIN_TILE)
             else
                 msg.post(
-                    "/inventory#script",
+                    INVENTORY_URL,
                     constants.messages.HARVEST_CROP,
                     { crop = crop, min = constants.tiles.WHEAT_MIN_TILE, max = constants.tiles.WHEAT_MAX_TILE })
                 

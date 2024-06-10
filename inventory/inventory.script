@@ -3,7 +3,11 @@ local constants = require("library.constants")
 go.property("crops", {})
 go.property("seeds", {})
 
+local BALANCE_URL = "/balance#script"
+
 function init(self)
+	msg.post(".", "acquire_input_focus")
+	
 	self.crops = {}
 	self.seeds = {}
 
@@ -23,6 +27,16 @@ function on_message(self, message_id, message, sender)
 			self.seeds[message.min] = self.seeds[message.min] + (message.crop - message.min + 1)
 
 			print(self.seeds[message.min])
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+	if action_id == constants.input.SELL_CROPS and action.pressed then
+		for k, v in pairs(self.crops) do
+			msg.post(BALANCE_URL, constants.messages.SELL_CROPS, { crop = k, amount = v })
+
+			self.crops[k] = 0
 		end
 	end
 end

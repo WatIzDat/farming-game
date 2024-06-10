@@ -23,9 +23,11 @@ M.input.CAMERA_ZOOM_IN = hash("camera_zoom_in")
 M.input.CAMERA_ZOOM_OUT = hash("camera_zoom_out")
 M.input.TILL_LAND = hash("till_land")
 M.input.PLANT_OR_DESTROY_CROP = hash("plant_or_destroy_crop")
+M.input.SELL_CROPS = hash("sell_crops")
 
 M.messages = {}
 
 M.messages.HARVEST_CROP = hash("harvest_crop")
+M.messages.SELL_CROPS = hash("sell_crops")
 
 return M
