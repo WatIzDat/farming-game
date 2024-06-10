@@ -1,0 +1,14 @@
+local world_gen = require("world.world_gen")
+
+go.property("x_offset", 0)
+go.property("y_offset", 0)
+
+function init(self)
+    self.tiles = world_gen:generate_world(self.x_offset, self.y_offset)
+
+    for x, rows in ipairs(self.tiles) do
+        for y, _ in ipairs(rows) do
+            tilemap.set_tile("#map", "ground", x, y, self.tiles[x][y])       
+        end
+    end
+end

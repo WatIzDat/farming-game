@@ -3,6 +3,7 @@ local constants = require("library.constants")
 local tile_util = require("library.tile_util")
 local camera = require("orthographic.camera")
 local inventory = require("inventory.module")
+local world_gen = require("world.world_gen")
 
 go.property("tile_size", 128)
 
@@ -10,43 +11,23 @@ local CAMERA_ID = hash("/camera")
 local TILEMAP_URL = "#world"
 local INVENTORY_URL = "/inventory#script"
 
-local height = 128
-local width = 128
+local height = 64
+local width = 64
 
 local function set_tile(self, layer, x, y, tile)
     tilemap.set_tile(TILEMAP_URL, layer, x, y, tile)
-    self.tiles[y][x] = tile
+    self.tiles[x][y] = tile
 end
 
 local function generate_world(self)
     self.tiles = {}
-    local value = {}
+    local tiles = world_gen:generate_world()
 
-    local seed_octave1 = rnd.number()
-    local seed_octave2 = rnd.number()
-    local seed_octave3 = rnd.number()
-
-    for y = 1, height do
-        self.tiles[y] = {}
-        value[y] = {}
-
-        for x = 1, width do
-            local nx = x / (width / 3)
-            local ny = y / (height / 3)
-
-            local elevation = 1 * ((perlin:noise(1 * nx, 1 * ny, seed_octave1) + 1) / 2)
-            + 0.5 * ((perlin:noise(2 * nx, 2 * ny, seed_octave2) + 1) / 2)
-            + 0.25 * ((perlin:noise(4 * nx, 4 * ny, seed_octave3) + 1) / 2)
-
-            elevation = elevation / (1 + 0.5 + 0.25)
-
-            value[y][x] = (elevation * 1.2) ^ 1.35
-
-            if value[y][x] < 0.43 then
-                set_tile(self, constants.layers.GROUND, x, y, constants.tiles.WATER_TILE)
-            else
-                set_tile(self, constants.layers.GROUND, x, y, constants.tiles.LAND_TILE)
-            end
+    for x, rows in ipairs(tiles) do
+        self.tiles[x] = {}
+        
+        for y, _ in ipairs(rows) do            
+            set_tile(self, constants.layers.GROUND, x, y, tiles[x][y])
         end
     end
 end

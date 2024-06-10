@@ -1,0 +1,8 @@
+local FACTORY_URL = "/factories#plot_factory"
+
+function init(self)
+	factory.create(FACTORY_URL, vmath.vector3(0, 1, 0), nil, { x_offset = 0, y_offset = 64 })
+	factory.create(FACTORY_URL, vmath.vector3(0, -1, 0), nil, { x_offset = 0, y_offset = -64 })
+	factory.create(FACTORY_URL, vmath.vector3(1, 0, 0), nil, { x_offset = 64, y_offset = 0 })
+	factory.create(FACTORY_URL, vmath.vector3(-1, 0, 0), nil, { x_offset = -64, y_offset = 0 })
+end
