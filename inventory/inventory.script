@@ -1,54 +1,55 @@
+local inventory = require("inventory.module")
 local constants = require("library.constants")
-
-go.property("crops", {})
-go.property("seeds", {})
 
 local BALANCE_URL = "/balance#script"
 
 function init(self)
-	msg.post(".", "acquire_input_focus")
-	
-	self.crops = {}
-	self.seeds = {}
+    msg.post(".", "acquire_input_focus")
 
-	for k, v in pairs(constants.tiles) do
-		self.crops[v] = 0
-		self.seeds[v] = 0
-	end
+    for k, v in pairs(constants.tiles) do
+        inventory.crops[v] = 0
+
+        -- start with one seed
+        inventory.seeds[v] = 1
+    end
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == constants.messages.HARVEST_CROP then
-		if message.crop == message.max then
-			self.crops[message.max] = self.crops[message.max] + 1
+    if message_id == constants.messages.HARVEST_CROP then
+        if message.crop == message.max then
+            inventory.crops[message.max] = inventory.crops[message.max] + 1
 
-			print(self.crops[message.max])
-		else
-			self.seeds[message.min] = self.seeds[message.min] + (message.crop - message.min + 1)
+            print(inventory.crops[message.max])
+        else
+            inventory.seeds[message.min] = inventory.seeds[message.min] + (message.crop - message.min + 1)
 
-			print(self.seeds[message.min])
-		end
-	end
+            print(inventory.seeds[message.min])
+        end
+    end
 
-	if message_id == constants.messages.BUY_SEEDS then
-		self.seeds[message.crop] = self.seeds[message.crop] + message.amount
+    if message_id == constants.messages.BUY_SEEDS then
+        inventory.seeds[message.crop] = inventory.seeds[message.crop] + message.amount
 
-		print("seed " .. self.seeds[message.crop])
-	end
+        print("seed " .. inventory.seeds[message.crop])
+    end
+
+    if message_id == constants.messages.REMOVE_SEED and inventory.seeds[message.crop] > 0 then
+        inventory.seeds[message.crop] = inventory.seeds[message.crop] - 1
+    end
 end
 
 function on_input(self, action_id, action)
-	if action_id == constants.input.SELL_CROPS and action.pressed then
-		for k, v in pairs(self.crops) do
-			msg.post(BALANCE_URL, constants.messages.SELL_CROPS, { crop = k, amount = v })
+    if action_id == constants.input.SELL_CROPS and action.pressed then
+        for k, v in pairs(inventory.crops) do
+            msg.post(BALANCE_URL, constants.messages.SELL_CROPS, { crop = k, amount = v })
 
-			self.crops[k] = 0
-		end
-	end
+            inventory.crops[k] = 0
+        end
+    end
 
-	if action_id == constants.input.BUY_SEEDS and action.pressed then
-		for k, v in pairs(self.seeds) do
-			msg.post(BALANCE_URL, constants.messages.BUY_SEEDS, { crop = k, amount = 1 })
-		end
-	end
+    if action_id == constants.input.BUY_SEEDS and action.pressed then
+        for k, v in pairs(inventory.seeds) do
+            msg.post(BALANCE_URL, constants.messages.BUY_SEEDS, { crop = k, amount = 1 })
+        end
+    end
 end

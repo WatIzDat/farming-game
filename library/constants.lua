@@ -31,5 +31,6 @@ M.messages = {}
 M.messages.HARVEST_CROP = hash("harvest_crop")
 M.messages.SELL_CROPS = hash("sell_crops")
 M.messages.BUY_SEEDS = hash("buy_seeds")
+M.messages.REMOVE_SEED = hash("remove_seed")
 
 return M

@@ -2,6 +2,7 @@ require("library.perlin")
 local constants = require("library.constants")
 local tile_util = require("library.tile_util")
 local camera = require("orthographic.camera")
+local inventory = require("inventory.module")
 
 go.property("tile_size", 128)
 
@@ -187,8 +188,12 @@ function on_input(self, action_id, action)
             local crop = tilemap.get_tile(TILEMAP_URL, constants.layers.CROPS, t.x, t.y)
             
             if crop == 0 then
-                set_tile(self, constants.layers.CROPS, t.x, t.y, constants.tiles.WHEAT_MIN_TILE)
-                create_growth_timer(self, t.x, t.y, constants.tiles.WHEAT_MIN_TILE)
+                if inventory.seeds[constants.tiles.WHEAT_MIN_TILE] > 0 then
+                    set_tile(self, constants.layers.CROPS, t.x, t.y, constants.tiles.WHEAT_MIN_TILE)
+                    create_growth_timer(self, t.x, t.y, constants.tiles.WHEAT_MIN_TILE)
+
+                    msg.post(INVENTORY_URL, constants.messages.REMOVE_SEED, { crop = constants.tiles.WHEAT_MIN_TILE })
+                end
             else
                 msg.post(
                     INVENTORY_URL,
